@@ -7,7 +7,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const photo = await db.recipePhoto.findUnique({ where: { id }, include: { recipe: true } });
   if (!photo) return new Response("Not found", { status: 404 });
 
-  // Photo visible si la recette est publique, ou si l'utilisateur a accès à la cuisine.
+  // Visible if the recipe is public, or if the user has access to the kitchen.
   let allowed = photo.recipe.publicSlug !== null;
   if (!allowed) {
     const user = await getCurrentUser();

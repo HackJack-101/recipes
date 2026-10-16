@@ -6,15 +6,15 @@ import type { Ingredient } from "@/lib/recipe-schema";
 import { formatQuantity } from "@/lib/scale";
 
 /**
- * Avec jauge : le lecteur choisit un nombre de convives, les quantités sont proportionnelles à `servings`.
- * Sans jauge (servings = null) : quantités d'origine + multiplicateur libre.
+ * With a guest count: the reader picks a number of guests and quantities scale proportionally to `servings`.
+ * Without one (servings = null): original quantities plus a free multiplier.
  */
 export function Scaler({ ingredients, servings }: { ingredients: Ingredient[]; servings: number | null }) {
   const t = useTranslations("recipe");
   const base = servings ?? 1;
   const [target, setTarget] = useState(base);
   const factor = target / base;
-  // Mise à jour fonctionnelle : plusieurs clics rapides s'additionnent au lieu de repartir de la même valeur.
+  // Functional update: several quick clicks add up instead of restarting from the same value.
   const clamp = (fn: (n: number) => number) =>
     setTarget((cur) => {
       const n = fn(cur);

@@ -8,7 +8,7 @@ const MAX_AGE = 60 * 60 * 24 * 30;
 
 function key() {
   const secret = process.env.SESSION_SECRET;
-  if (!secret || secret.length < 32) throw new Error("SESSION_SECRET doit faire au moins 32 caractères");
+  if (!secret || secret.length < 32) throw new Error("SESSION_SECRET must be at least 32 characters");
   return new TextEncoder().encode(secret);
 }
 

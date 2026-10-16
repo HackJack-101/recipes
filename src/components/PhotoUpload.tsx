@@ -12,7 +12,7 @@ export function PhotoUpload({ recipeId }: { recipeId: string }) {
     <form ref={form} action={action} className="no-print">
       <label className="btn" style={{ cursor: "pointer", marginBottom: 0 }}>
         📷 {t("addPhoto")}
-        {/* capture: sur téléphone, propose directement l'appareil photo ou la galerie */}
+        {/* On phones, the browser offers the camera or the gallery directly */}
         <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/gif" hidden disabled={pending}
           onChange={() => form.current?.requestSubmit()} />
       </label>

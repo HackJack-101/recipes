@@ -1,50 +1,71 @@
-# Recettes
+# Recipes
 
-Application web (Next.js + TypeScript) pour héberger des recettes de cuisine, en français et en anglais.
-Interface responsive : téléphone, tablette, ordinateur.
+A self-hosted web app (Next.js + TypeScript + PostgreSQL) to store and share cooking recipes,
+available in **French and English**. The UI is responsive: phone, tablet and desktop.
 
-## Démarrage
+## Quick start
 
 ```bash
-cp .env.example .env     # puis éditer : SESSION_SECRET, SUPERADMIN_*, ANTHROPIC_API_KEY
+cp .env.example .env     # then edit: SESSION_SECRET, SUPERADMIN_*, ANTHROPIC_API_KEY
 docker compose up -d --build
 ```
 
-Ouvrir http://localhost:3000. Au premier démarrage, le super admin est créé depuis
-`SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD` (jamais écrasé ensuite).
+Open http://localhost:3000. On first start the super admin is created from
+`SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD` (an existing account is never overwritten).
 
-### Image Docker publiée
+### Published Docker image
 
-La GitHub Action (`.github/workflows/docker.yml`) construit l'image (amd64 + arm64) et la publie sur
-`ghcr.io/hackjack-101/recipes` (tags `latest`, `sha-<commit>`, `vX.Y.Z`). Pour l'utiliser sans compiler :
+The GitHub Action (`.github/workflows/docker.yml`) type-checks the project, then builds a multi-arch
+image (amd64 + arm64) and publishes it to `ghcr.io/hackjack-101/recipes`
+(tags `latest`, `sha-<commit>`, `vX.Y.Z`). To run it without building:
 
 ```bash
 docker compose pull && docker compose up -d
 ```
 
-Le SHA du commit de l'image en cours d'exécution est affiché en pied de page de l'interface.
-En local : `GIT_SHA=$(git rev-parse HEAD) GIT_REPO=hackjack-101/recipes docker compose up -d --build`.
+The commit SHA of the running image is displayed in the footer of the UI.
+Local build with the SHA: `GIT_SHA=$(git rev-parse HEAD) GIT_REPO=hackjack-101/recipes docker compose up -d --build`.
 
-## Fonctionnement
+> The first time the image is published, GitHub creates the package as private: set it to public in the
+> package settings if you want to pull it without authentication.
 
-- **Super admin** : crée les utilisateurs et les cuisines, rattache les utilisateurs aux cuisines (page Administration).
-- **Utilisateur** : peut appartenir à plusieurs cuisines ; chaque recette appartient à une cuisine.
-- **Recettes** : saisie manuelle, ou import par URL / code source HTML / texte libre. Un agent Claude
-  (`src/lib/importer.ts`, modèle réglable via `ANTHROPIC_MODEL`) extrait une recette structurée ; elle s'ouvre ensuite en édition pour relecture.
-- **Convives** : chaque recette a un nombre de convives défini par son auteur, ou aucun (« pas de jauge »).
-  Le lecteur peut recalculer les quantités ; sans jauge, il dispose d'un multiplicateur libre.
-- **Photos** : plusieurs par recette, stockées dans le volume `uploads`.
-- **Partage public** : lien `/<langue>/r/<slug>` en lecture seule, révocable.
-- **Export** : une recette en `.md`, ou toute une cuisine en `.zip` (un fichier Markdown par recette).
-- **Propriétaires de cuisine** : gèrent les membres de leur cuisine (ajout par e-mail, rôles) et la renomment.
-- **Tags et recherche** : tags par cuisine (proposés par l'agent à l'import), filtre par tag et recherche texte.
+## Features
 
-## Développement
+- **Users and kitchens**: the super admin creates users and kitchens. A user can belong to several
+  kitchens; every recipe belongs to exactly one kitchen.
+- **Roles**: super admin (everything), kitchen *owner* (manages members, renames the kitchen) and *member*.
+- **Recipes**: manual entry, or import from a **URL**, **raw HTML** or **plain text**. A Claude agent
+  (`src/lib/importer.ts`, model set by `ANTHROPIC_MODEL`) extracts a structured recipe, suggests tags and
+  reuses the kitchen's existing ones. The result opens in the editor for review.
+- **Guest count**: the author sets the number of guests, or none ("no gauge"). Readers can rescale the
+  quantities; without a gauge they get a free multiplier.
+- **Tags and search**: per-kitchen tags, tag filter and text search.
+- **Photos**: several per recipe, stored in the `uploads` volume.
+- **Public sharing**: read-only link at `/<locale>/r/<slug>`, revocable at any time.
+- **Export**: one recipe as `.md`, or a whole kitchen as a `.zip` (one Markdown file per recipe).
+
+## Configuration
+
+| Variable | Purpose |
+| --- | --- |
+| `POSTGRES_PASSWORD` | Database password (Docker Compose) |
+| `SESSION_SECRET` | Session signing secret, 32+ characters |
+| `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD`, `SUPERADMIN_NAME` | Super admin created at startup |
+| `ANTHROPIC_API_KEY` | Enables the AI import |
+| `ANTHROPIC_MODEL` | Model used by the import agent (default `claude-haiku-5-5`) |
+| `COOKIE_SECURE` | Set to `true` when served over HTTPS |
+| `PORT` | Host port (default `3000`) |
+
+Some websites block automated requests (HTTP 403). For those, open the page in your browser and use the
+**HTML source** or **plain text** import instead.
+
+## Development
 
 ```bash
-docker compose up -d db
-npm install && npx prisma migrate dev && npm run dev
+docker compose -f compose.yaml -f compose.dev.yaml up -d db   # publishes Postgres on 127.0.0.1:5432
+npm install        # DATABASE_URL in .env must point to localhost:5432
+npx prisma migrate dev
+npm run dev
 ```
 
-Schéma : `prisma/schema.prisma`. Traductions : `messages/{fr,en}.json`.
-En production derrière HTTPS, mettre `COOKIE_SECURE=true`.
+Schema: `prisma/schema.prisma`. Translations: `messages/{fr,en}.json`.

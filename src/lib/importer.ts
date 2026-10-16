@@ -9,7 +9,7 @@ export type ImportMode = "url" | "html" | "text";
 
 const MAX_CHARS = 300_000;
 
-// Schéma volontairement sans contraintes : on valide/normalise ensuite avec recipeDataSchema.
+// Deliberately unconstrained schema: the result is validated/normalized afterwards with recipeDataSchema.
 const extractionSchema = z.object({
   isRecipe: z.boolean(),
   title: z.string(),
@@ -36,7 +36,7 @@ Rules:
 - tags: 2 to 4 short lowercase labels in the source language (dish type, main ingredient, diet, occasion), e.g. "dessert", "végétarien". Prefer reusing a label from the user's existing tags when one fits (same spelling); only create a new one when none fits. Never create near-duplicates ("petit déjeuner" vs "petit-déjeuner"). Empty list if unsure.
 - If the content contains no recipe, set isRecipe to false and leave the other fields empty.`;
 
-/** Réduit une page HTML au contenu utile : JSON-LD (souvent très propre pour les recettes) + texte visible. */
+/** Reduces an HTML page to its useful content: JSON-LD (often very clean for recipes) + visible text. */
 export function htmlToText(html: string): string {
   const $ = cheerio.load(html);
   const jsonLd = $('script[type="application/ld+json"]')
@@ -57,7 +57,7 @@ export async function importRecipe(mode: ImportMode, input: string, existingTags
   else content = input.trim();
 
   if (!content) throw new ImportError("noRecipe");
-  // On refuse plutôt que de tronquer silencieusement.
+  // Refuse rather than silently truncate.
   if (content.length > MAX_CHARS) throw new ImportError("tooLarge");
 
   const client = new Anthropic();
@@ -76,7 +76,7 @@ export async function importRecipe(mode: ImportMode, input: string, existingTags
       ],
     });
   } catch (e) {
-    console.error("[import] appel Claude en échec", e);
+    console.error("[import] Claude call failed", e);
     throw new ImportError("aiFailed");
   }
 

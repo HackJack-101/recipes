@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 
-/** Crée le super admin au démarrage s'il n'en existe aucun. N'écrase jamais un compte existant. */
+/** Creates the super admin at startup if none exists. Never overwrites an existing account. */
 export async function ensureSuperAdmin() {
   const email = process.env.SUPERADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.SUPERADMIN_PASSWORD;
   if (!email || !password) {
-    console.warn("[bootstrap] SUPERADMIN_EMAIL / SUPERADMIN_PASSWORD absents : aucun super admin créé.");
+    console.warn("[bootstrap] SUPERADMIN_EMAIL / SUPERADMIN_PASSWORD not set: no super admin created.");
     return;
   }
   if ((await db.user.count({ where: { isSuperAdmin: true } })) > 0) return;
@@ -21,5 +21,5 @@ export async function ensureSuperAdmin() {
       isSuperAdmin: true,
     },
   });
-  console.log(`[bootstrap] Super admin créé : ${email}`);
+  console.log(`[bootstrap] Super admin created: ${email}`);
 }

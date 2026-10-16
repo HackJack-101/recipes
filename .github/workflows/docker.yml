@@ -52,11 +52,11 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          # Les PR construisent l'image sans la publier.
+          # Pull requests build the image without publishing it.
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # SHA affiché dans le pied de page de l'application.
+          # SHA displayed in the application footer.
           build-args: |
             GIT_SHA=${{ github.sha }}
             GIT_REPO=${{ github.repository }}

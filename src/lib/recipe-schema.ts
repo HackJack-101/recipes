@@ -17,7 +17,7 @@ export const recipeDataSchema = z.object({
   tags: z.array(z.string().trim().min(1).max(30)).max(20).default([]),
 });
 
-/** "Dessert, Rapide ,dessert" -> ["dessert", "rapide"] : minuscules, sans doublon, 20 max. */
+/** "Dessert, Rapide ,dessert" -> ["dessert", "rapide"]: lowercase, deduplicated, 20 max. */
 export function parseTags(raw: string | string[]): string[] {
   const parts = Array.isArray(raw) ? raw : raw.split(/[,\n]/);
   const seen = new Set<string>();

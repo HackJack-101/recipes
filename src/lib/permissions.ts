@@ -16,7 +16,7 @@ export async function requireSuperAdmin() {
   return user;
 }
 
-/** Membre de la cuisine, ou super admin. 404 sinon (on ne révèle pas l'existence). */
+/** Kitchen member, or super admin. 404 otherwise (existence is not revealed). */
 export async function requireKitchen(kitchenId: string) {
   const user = await requireUser();
   const kitchen = await db.kitchen.findFirst({
@@ -26,7 +26,7 @@ export async function requireKitchen(kitchenId: string) {
   return { user, kitchen: kitchen! };
 }
 
-/** Propriétaire de la cuisine, ou super admin. */
+/** Kitchen owner, or super admin. */
 export async function requireKitchenOwner(kitchenId: string) {
   const user = await requireUser();
   if (!user.isSuperAdmin) {

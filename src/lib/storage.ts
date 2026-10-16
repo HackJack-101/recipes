@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 const DIR = path.resolve(process.env.UPLOAD_DIR || "./data/uploads");
 export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
-/** Détecte le vrai type d'image via les magic bytes (on ne fait pas confiance au Content-Type client). */
+/** Detects the real image type from magic bytes (the client Content-Type is not trusted). */
 export function sniffImage(buf: Buffer): { mime: string; ext: string } | null {
   if (buf.length < 12) return null;
   if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return { mime: "image/jpeg", ext: "jpg" };

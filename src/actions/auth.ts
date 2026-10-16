@@ -8,7 +8,7 @@ import { createSession, destroySession } from "@/lib/session";
 
 export type FormState = { error?: string } | undefined;
 
-// Hash factice pour que le temps de réponse ne révèle pas si l'e-mail existe.
+// Dummy hash so the response time does not reveal whether the email exists.
 const DUMMY_HASH = bcrypt.hashSync("dummy-password", 12);
 
 export async function login(_prev: FormState, formData: FormData): Promise<FormState> {

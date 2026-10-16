@@ -7,7 +7,7 @@ import type { FormState } from "./auth";
 
 const refresh = () => revalidatePath("/", "layout");
 
-/** Un propriétaire non super admin ne peut pas laisser sa cuisine sans propriétaire. */
+/** A non-super-admin owner cannot leave their kitchen without an owner. */
 async function wouldOrphan(kitchenId: string, userId: string, isSuperAdmin: boolean) {
   if (isSuperAdmin) return false;
   const target = await db.membership.findUnique({ where: { userId_kitchenId: { userId, kitchenId } } });
@@ -23,7 +23,7 @@ export async function renameKitchen(kitchenId: string, formData: FormData) {
   refresh();
 }
 
-/** Ajoute un utilisateur existant, par e-mail (la liste des comptes n'est pas exposée aux propriétaires). */
+/** Adds an existing user by email (the account list is not exposed to owners). */
 export async function addMemberByEmail(kitchenId: string, _prev: FormState, formData: FormData): Promise<FormState> {
   await requireKitchenOwner(kitchenId);
   const email = String(formData.get("email") ?? "").trim().toLowerCase();

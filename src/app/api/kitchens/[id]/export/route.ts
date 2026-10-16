@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { fileSlug, recipeToMarkdown } from "@/lib/export";
 
-/** Export en masse : un fichier Markdown par recette, regroupés dans une archive ZIP. */
+/** Bulk export: one Markdown file per recipe, bundled in a ZIP archive. */
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return new Response("Unauthorized", { status: 401 });

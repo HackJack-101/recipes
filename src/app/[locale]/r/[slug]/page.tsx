@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: recipe?.title, robots: { index: false } };
 }
 
-/** Page publique : aucune authentification, lecture seule. */
+/** Public page: no authentication, read-only. */
 export default async function PublicRecipePage({ params }: { params: Promise<{ slug: string }> }) {
   const recipe = await find((await params).slug);
   if (!recipe) notFound();

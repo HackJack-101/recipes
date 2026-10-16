@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-/** Version de l'image Docker en cours d'exécution (SHA du commit injecté au build). */
+/** Version of the running Docker image (commit SHA injected at build time). */
 export async function Footer() {
   const t = await getTranslations("common");
   const sha = process.env.GIT_SHA || "dev";

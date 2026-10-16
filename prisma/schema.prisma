@@ -55,7 +55,7 @@ model Recipe {
   authorId    String
   title       String
   description String?
-  // null = recette sans jauge de convives : le lecteur s'adapte
+  // null = recipe without a guest count: the reader adapts the quantities
   servings    Int?
   prepMinutes Int?
   cookMinutes Int?
@@ -65,7 +65,7 @@ model Recipe {
   steps       Json
   sourceType  SourceType    @default(MANUAL)
   sourceUrl   String?
-  // non null = recette partagée publiquement sur /r/<slug>
+  // non-null = recipe shared publicly at /r/<slug>
   publicSlug  String?       @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

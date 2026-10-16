@@ -28,7 +28,7 @@ async function assertPublicHost(hostname: string) {
   if (!addrs.length || addrs.some((a) => isPrivateIp(a.address))) throw new ImportError("blockedUrl");
 }
 
-/** Télécharge une page web côté serveur, en bloquant les adresses internes (SSRF), redirections comprises. */
+/** Downloads a web page server-side, blocking internal addresses (SSRF), redirects included. */
 export async function fetchPage(rawUrl: string): Promise<string> {
   let url: URL;
   try {

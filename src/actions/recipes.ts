@@ -97,7 +97,7 @@ export async function importRecipeAction(kitchenId: string, _prev: FormState, fd
       sourceUrl: mode === "url" ? input.trim() : null,
     },
   });
-  // On renvoie vers l'édition pour que l'utilisateur relise ce que l'agent a extrait.
+  // Redirect to the edit page so the user can review what the agent extracted.
   redirect({ href: `/kitchens/${kitchen.id}/recipes/${created.id}/edit`, locale: await getLocale() });
 }
 

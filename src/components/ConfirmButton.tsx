@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-/** Bouton de soumission qui demande confirmation avant d'envoyer le formulaire parent. */
+/** Submit button that asks for confirmation before submitting the parent form. */
 export function ConfirmButton({ children, className }: { children: React.ReactNode; className?: string }) {
   const t = useTranslations("common");
   return (
