@@ -21,8 +21,9 @@ export function LocaleSwitcher() {
       }
     >
       {routing.locales.map((l) => (
-        <option key={l} value={l}>
-          {t(l)}
+        // Short codes keep the header on one line on phones; the full name is in the tooltip.
+        <option key={l} value={l} title={t(l)}>
+          {l.toUpperCase()}
         </option>
       ))}
     </select>

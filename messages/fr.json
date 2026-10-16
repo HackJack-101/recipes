@@ -6,7 +6,7 @@
     "edit": "Modifier",
     "logout": "Déconnexion",
     "confirmDelete": "Supprimer définitivement ?",
-    "admin": "Administration",
+    "admin": "Admin",
     "kitchens": "Cuisines",
     "version": "Version :"
   },
@@ -26,7 +26,7 @@
     "newRecipe": "Nouvelle recette",
     "import": "Importer",
     "noRecipes": "Aucune recette dans cette cuisine.",
-    "exportAll": "Tout exporter (.zip)",
+    "exportAll": "Exporter (.zip)",
     "shared": "Partagée",
     "totalTime": "{n} min",
     "search": "Rechercher une recette…",
@@ -75,7 +75,7 @@
     "addIngredient": "Ajouter un ingrédient",
     "removeIngredient": "Retirer",
     "steps": "Étapes (une par paragraphe, séparées par une ligne vide)",
-    "invalid": "Veuillez vérifier le formulaire : le titre est obligatoire.",
+    "invalid": "Veuillez vérifier le formulaire : le titre est obligatoire et les nombres doivent être valides.",
     "tags": "Tags",
     "tagsHint": "dessert, rapide, végétarien (séparés par des virgules)"
   },

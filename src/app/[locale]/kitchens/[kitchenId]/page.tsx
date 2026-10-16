@@ -79,7 +79,7 @@ export default async function KitchenPage({
         </form>
       )}
       {tags.length > 0 && (
-        <p className="tags">
+        <p className="tags tag-filter">
           <Link href={href({ q: query })} className={`tag${tag ? "" : " active"}`}>
             {t("allTags")}
           </Link>

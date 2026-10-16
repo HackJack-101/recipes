@@ -6,7 +6,7 @@
     "edit": "Edit",
     "logout": "Log out",
     "confirmDelete": "Delete permanently?",
-    "admin": "Administration",
+    "admin": "Admin",
     "kitchens": "Kitchens",
     "version": "Version:"
   },
@@ -75,7 +75,7 @@
     "addIngredient": "Add an ingredient",
     "removeIngredient": "Remove",
     "steps": "Steps (one per paragraph, separated by a blank line)",
-    "invalid": "Please check the form: a title is required.",
+    "invalid": "Please check the form: a title is required and numbers must be in range.",
     "tags": "Tags",
     "tagsHint": "dessert, quick, vegetarian (comma-separated)"
   },
