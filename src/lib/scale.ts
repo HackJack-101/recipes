@@ -17,3 +17,8 @@ export function formatQuantity(q: number): string {
   if (hit) return whole ? `${whole} ${hit[1]}` : hit[1];
   return String(Math.round(q * 100) / 100);
 }
+
+/** Keeps the scaler in range: whole guests (1–500), or a free multiplier (0.25–100) when there is no guest count. */
+export function clampScale(n: number, servings: number | null): number {
+  return servings ? Math.max(1, Math.min(500, Math.round(n))) : Math.max(0.25, Math.min(100, n));
+}

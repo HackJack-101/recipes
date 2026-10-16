@@ -46,6 +46,8 @@
     "noGauge": "Cette recette n'a pas de nombre de convives défini. Adaptez les quantités à votre besoin.",
     "multiplier": "Multiplicateur",
     "reset": "Remettre à l'original",
+    "less": "Moins",
+    "more": "Plus",
     "prep": "Préparation : {n} min",
     "cook": "Cuisson : {n} min",
     "export": "Exporter (.md)",

@@ -46,6 +46,8 @@
     "noGauge": "This recipe has no set number of guests. Adjust the quantities to your needs.",
     "multiplier": "Multiplier",
     "reset": "Reset to original",
+    "less": "Fewer",
+    "more": "More",
     "prep": "Prep: {n} min",
     "cook": "Cook: {n} min",
     "export": "Export (.md)",

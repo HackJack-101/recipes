@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatQuantity } from "./scale";
+import { clampScale, formatQuantity } from "./scale";
 
 describe("formatQuantity", () => {
   it("prints whole numbers", () => {
@@ -17,5 +17,19 @@ describe("formatQuantity", () => {
   it("falls back to two decimals", () => {
     expect(formatQuantity(1.4)).toBe("1.4");
     expect(formatQuantity(0.123)).toBe("0.12");
+  });
+});
+
+describe("clampScale", () => {
+  it("keeps whole guests between 1 and 500", () => {
+    expect(clampScale(3.6, 4)).toBe(4);
+    expect(clampScale(0, 4)).toBe(1);
+    expect(clampScale(900, 4)).toBe(500);
+  });
+
+  it("keeps a free multiplier between 0.25 and 100", () => {
+    expect(clampScale(0.5, null)).toBe(0.5);
+    expect(clampScale(0, null)).toBe(0.25);
+    expect(clampScale(1000, null)).toBe(100);
   });
 });
