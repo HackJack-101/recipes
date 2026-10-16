@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  typecheck:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,9 +22,12 @@ jobs:
       - run: npm ci
       - run: npx prisma generate
       - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
 
   docker:
-    needs: typecheck
+    needs: checks
     runs-on: ubuntu-latest
     permissions:
       contents: read

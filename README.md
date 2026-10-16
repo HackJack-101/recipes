@@ -15,7 +15,7 @@ Open http://localhost:3000. On first start the super admin is created from
 
 ### Published Docker image
 
-The GitHub Action (`.github/workflows/docker.yml`) type-checks the project, then builds a multi-arch
+The GitHub Action (`.github/workflows/docker.yml`) type-checks, lints and tests the project, then builds a multi-arch
 image (amd64 + arm64) and publishes it to `ghcr.io/hackjack-101/recipes`
 (tags `latest`, `sha-<commit>`, `vX.Y.Z`). To run it without building:
 
@@ -67,5 +67,7 @@ npm install        # DATABASE_URL in .env must point to localhost:5432
 npx prisma migrate dev
 npm run dev
 ```
+
+Checks (also run in CI): `npm run typecheck`, `npm run lint`, `npm run format:check` (`npm run format` to fix), `npm test`.
 
 Schema: `prisma/schema.prisma`. Translations: `messages/{fr,en}.json`.
