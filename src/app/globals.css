@@ -451,6 +451,19 @@ a.card:hover {
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
+/* Phones: table rows become stacked blocks so long cells (emails) are not cut mid-word. */
+@media (max-width: 639px) {
+  .table tr {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .table td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+}
 .stack > * + * {
   margin-top: 0.75rem;
 }

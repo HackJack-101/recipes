@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { requireRecipe } from "@/lib/permissions";
 import { ingredientsFromJson, stepsFromJson } from "@/lib/recipe-schema";
 import { RecipeForm } from "@/components/RecipeForm";
@@ -9,6 +10,9 @@ export default async function EditRecipePage({ params }: { params: Promise<{ kit
   const t = await getTranslations("form");
   return (
     <>
+      <p>
+        <Link href={`/kitchens/${recipe.kitchenId}/recipes/${recipe.id}`}>← {recipe.title}</Link>
+      </p>
       <h1>{t("editTitle")}</h1>
       <RecipeForm
         kitchenId={recipe.kitchenId}
