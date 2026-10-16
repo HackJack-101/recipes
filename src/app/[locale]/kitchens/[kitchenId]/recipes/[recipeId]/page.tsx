@@ -6,9 +6,9 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { RecipeView } from "@/components/RecipeView";
 
-export default async function RecipePage({ params }: { params: Promise<{ recipeId: string }> }) {
-  const { recipeId } = await params;
-  const { recipe } = await requireRecipe(recipeId);
+export default async function RecipePage({ params }: { params: Promise<{ kitchenId: string; recipeId: string }> }) {
+  const { kitchenId, recipeId } = await params;
+  const { recipe } = await requireRecipe(recipeId, kitchenId);
   const t = await getTranslations("recipe");
   const tc = await getTranslations("common");
   const locale = await getLocale();

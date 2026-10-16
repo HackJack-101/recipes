@@ -27,26 +27,22 @@ export async function saveRecipe(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  const { user, kitchen } = await requireKitchen(kitchenId);
+  if (recipeId) await requireRecipe(recipeId, kitchen.id);
   const data = parseRecipeForm(fd);
   if (!data) return { error: "invalid" };
-  const locale = await getLocale();
-  if (recipeId) {
-    const { recipe } = await requireRecipe(recipeId);
-    const { tags, ...fields } = data;
-    await db.recipe.update({
-      where: { id: recipe.id },
-      data: { ...fields, tags: { set: [], ...tagsInput(recipe.kitchenId, tags) } },
-    });
-    await pruneTags(recipe.kitchenId);
-    revalidatePath("/", "layout");
-    redirect({ href: `/kitchens/${recipe.kitchenId}/recipes/${recipe.id}`, locale });
-  }
-  const { user, kitchen } = await requireKitchen(kitchenId);
   const { tags, ...fields } = data;
-  const created = await db.recipe.create({
-    data: { ...fields, kitchenId: kitchen.id, authorId: user.id, tags: tagsInput(kitchen.id, tags) },
-  });
-  redirect({ href: `/kitchens/${kitchen.id}/recipes/${created.id}`, locale });
+  const recipe = recipeId
+    ? await db.recipe.update({
+        where: { id: recipeId },
+        data: { ...fields, tags: { set: [], ...tagsInput(kitchen.id, tags) } },
+      })
+    : await db.recipe.create({
+        data: { ...fields, kitchenId: kitchen.id, authorId: user.id, tags: tagsInput(kitchen.id, tags) },
+      });
+  if (recipeId) await pruneTags(kitchen.id);
+  revalidatePath("/", "layout");
+  redirect({ href: `/kitchens/${kitchen.id}/recipes/${recipe.id}`, locale: await getLocale() });
 }
 
 export async function importRecipeAction(kitchenId: string, _prev: FormState, fd: FormData): Promise<FormState> {

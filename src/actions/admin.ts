@@ -36,7 +36,11 @@ export async function createKitchen(formData: FormData) {
 export async function addMember(kitchenId: string, formData: FormData) {
   await requireSuperAdmin();
   const userId = String(formData.get("userId") ?? "");
-  if (!userId) return;
+  const [user, kitchen] = await Promise.all([
+    db.user.findUnique({ where: { id: userId } }),
+    db.kitchen.findUnique({ where: { id: kitchenId } }),
+  ]);
+  if (!user || !kitchen) return;
   await db.membership.upsert({
     where: { userId_kitchenId: { userId, kitchenId } },
     update: {},

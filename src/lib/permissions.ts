@@ -29,10 +29,7 @@ export async function requireKitchen(kitchenId: string) {
 /** Kitchen owner, or super admin. */
 export async function requireKitchenOwner(kitchenId: string) {
   const user = await requireUser();
-  if (!user.isSuperAdmin) {
-    const m = await db.membership.findUnique({ where: { userId_kitchenId: { userId: user.id, kitchenId } } });
-    if (m?.role !== "OWNER") notFound();
-  }
+  if (!(await isKitchenOwner(user, kitchenId))) notFound();
   const kitchen = await db.kitchen.findUnique({ where: { id: kitchenId } });
   if (!kitchen) notFound();
   return { user, kitchen: kitchen! };
@@ -44,11 +41,13 @@ export async function isKitchenOwner(user: { id: string; isSuperAdmin: boolean }
   return m?.role === "OWNER";
 }
 
-export async function requireRecipe(recipeId: string) {
+/** Recipe the user can access; when `kitchenId` is given, the recipe must also belong to that kitchen. */
+export async function requireRecipe(recipeId: string, kitchenId?: string) {
   const user = await requireUser();
   const recipe = await db.recipe.findFirst({
     where: {
       id: recipeId,
+      ...(kitchenId ? { kitchenId } : {}),
       ...(user.isSuperAdmin ? {} : { kitchen: { memberships: { some: { userId: user.id } } } }),
     },
     include: { photos: { orderBy: { createdAt: "asc" } }, kitchen: true, tags: { orderBy: { name: "asc" } } },

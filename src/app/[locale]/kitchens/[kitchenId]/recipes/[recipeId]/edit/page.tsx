@@ -3,9 +3,9 @@ import { requireRecipe } from "@/lib/permissions";
 import { ingredientsFromJson, stepsFromJson } from "@/lib/recipe-schema";
 import { RecipeForm } from "@/components/RecipeForm";
 
-export default async function EditRecipePage({ params }: { params: Promise<{ recipeId: string }> }) {
-  const { recipeId } = await params;
-  const { recipe } = await requireRecipe(recipeId);
+export default async function EditRecipePage({ params }: { params: Promise<{ kitchenId: string; recipeId: string }> }) {
+  const { kitchenId, recipeId } = await params;
+  const { recipe } = await requireRecipe(recipeId, kitchenId);
   const t = await getTranslations("form");
   return (
     <>
