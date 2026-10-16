@@ -4,17 +4,25 @@ import net from "node:net";
 const MAX_BYTES = 5 * 1024 * 1024;
 
 export class ImportError extends Error {
-  constructor(public code: "invalidUrl" | "blockedUrl" | "fetchFailed" | "tooLarge" | "noRecipe" | "aiFailed" | "notConfigured") {
+  constructor(
+    public code: "invalidUrl" | "blockedUrl" | "fetchFailed" | "tooLarge" | "noRecipe" | "aiFailed" | "notConfigured",
+  ) {
     super(code);
   }
 }
 
-function isPrivateIp(ip: string): boolean {
+export function isPrivateIp(ip: string): boolean {
   if (net.isIPv4(ip)) {
     const [a, b] = ip.split(".").map(Number);
     return (
-      a === 0 || a === 10 || a === 127 || (a === 169 && b === 254) ||
-      (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127) || a >= 224
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      a >= 224
     );
   }
   const l = ip.toLowerCase();
@@ -44,7 +52,10 @@ export async function fetchPage(rawUrl: string): Promise<string> {
       res = await fetch(url, {
         redirect: "manual",
         signal: AbortSignal.timeout(15_000),
-        headers: { "user-agent": "Mozilla/5.0 (compatible; RecipesBot/1.0)", accept: "text/html,application/xhtml+xml" },
+        headers: {
+          "user-agent": "Mozilla/5.0 (compatible; RecipesBot/1.0)",
+          accept: "text/html,application/xhtml+xml",
+        },
       });
     } catch {
       throw new ImportError("fetchFailed");

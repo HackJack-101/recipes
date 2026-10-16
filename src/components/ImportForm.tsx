@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
+import { keepValues } from "@/lib/keep-values";
 import { importRecipeAction } from "@/actions/recipes";
 
 const MODES = ["url", "html", "text"] as const;
@@ -13,8 +14,8 @@ export function ImportForm({ kitchenId }: { kitchenId: string }) {
   const modeLabel = { url: t("modeUrl"), html: t("modeHtml"), text: t("modeText") };
 
   return (
-    <form action={action}>
-      <div className="tabs" role="radiogroup">
+    <form action={action} onSubmit={keepValues(action)}>
+      <div className="tabs" role="radiogroup" aria-label={t("mode")}>
         {MODES.map((m) => (
           <label key={m}>
             <input type="radio" name="mode" value={m} checked={mode === m} onChange={() => setMode(m)} />
@@ -30,9 +31,15 @@ export function ImportForm({ kitchenId }: { kitchenId: string }) {
           <textarea id={mode} name={mode} required style={{ minHeight: "14rem" }} />
         )}
       </div>
-      {state?.error && <p className="error" role="alert">{t(`errors.${state.error}` as "errors.empty")}</p>}
+      {state?.error && (
+        <p className="error" role="alert">
+          {t(`errors.${state.error}` as "errors.empty")}
+        </p>
+      )}
       <div className="actions">
-        <button className="primary" disabled={pending}>{pending ? t("running") : t("submit")}</button>
+        <button className="primary" disabled={pending}>
+          {pending ? t("running") : t("submit")}
+        </button>
       </div>
     </form>
   );

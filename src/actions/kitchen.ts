@@ -17,7 +17,9 @@ async function wouldOrphan(kitchenId: string, userId: string, isSuperAdmin: bool
 
 export async function renameKitchen(kitchenId: string, formData: FormData) {
   await requireKitchenOwner(kitchenId);
-  const name = String(formData.get("name") ?? "").trim().slice(0, 100);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 100);
   if (!name) return;
   await db.kitchen.update({ where: { id: kitchenId }, data: { name } });
   refresh();
@@ -26,7 +28,9 @@ export async function renameKitchen(kitchenId: string, formData: FormData) {
 /** Adds an existing user by email (the account list is not exposed to owners). */
 export async function addMemberByEmail(kitchenId: string, _prev: FormState, formData: FormData): Promise<FormState> {
   await requireKitchenOwner(kitchenId);
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const user = await db.user.findUnique({ where: { email } });
   if (!user) return { error: "userNotFound" };
   await db.membership.upsert({

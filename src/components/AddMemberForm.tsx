@@ -21,8 +21,14 @@ export function AddMemberForm({ kitchenId }: { kitchenId: string }) {
           <option value="OWNER">{t("OWNER")}</option>
         </select>
       </div>
-      {state?.error && <p className="error" role="alert">{t("userNotFound")}</p>}
-      <button className="primary" disabled={pending}>{t("addButton")}</button>
+      {state?.error && (
+        <p className="error" role="alert">
+          {t("userNotFound")}
+        </p>
+      )}
+      <button className="primary" disabled={pending}>
+        {t("addButton")}
+      </button>
     </form>
   );
 }

@@ -17,11 +17,19 @@ export default async function MembersPage({ params }: { params: Promise<{ kitche
   });
   return (
     <>
-      <p><Link href={`/kitchens/${kitchenId}`}>← {kitchen.name}</Link></p>
+      <p>
+        <Link href={`/kitchens/${kitchenId}`}>← {kitchen.name}</Link>
+      </p>
       <h1>{t("title")}</h1>
 
       <form action={renameKitchen.bind(null, kitchenId)} className="card row" style={{ marginBottom: "1rem" }}>
-        <input name="name" defaultValue={kitchen.name} aria-label={t("kitchenName")} required style={{ flex: "1 1 12rem", width: "auto" }} />
+        <input
+          name="name"
+          defaultValue={kitchen.name}
+          aria-label={t("kitchenName")}
+          required
+          style={{ flex: "1 1 12rem", width: "auto" }}
+        />
         <button>{t("rename")}</button>
       </form>
 
@@ -30,13 +38,17 @@ export default async function MembersPage({ params }: { params: Promise<{ kitche
           <div className="card row" key={m.userId}>
             <div style={{ marginRight: "auto" }}>
               <strong>{m.user.name}</strong> {m.role === "OWNER" && <span className="badge">{t("OWNER")}</span>}
-              <div className="muted" style={{ wordBreak: "break-all" }}>{m.user.email}</div>
+              <div className="muted" style={{ wordBreak: "break-all" }}>
+                {m.user.email}
+              </div>
             </div>
             <form action={setRole.bind(null, kitchenId, m.userId, m.role === "OWNER" ? "MEMBER" : "OWNER")}>
               <button>{m.role === "OWNER" ? t("demote") : t("promote")}</button>
             </form>
             <form action={removeMember.bind(null, kitchenId, m.userId)}>
-              <ConfirmButton className="danger">{t("remove")}</ConfirmButton>
+              <ConfirmButton className="danger" question={t("confirmRemove")}>
+                {t("remove")}
+              </ConfirmButton>
             </form>
           </div>
         ))}

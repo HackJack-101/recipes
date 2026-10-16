@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { logout } from "@/actions/auth";
 import { getCurrentUser } from "@/lib/session";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { NavLink } from "./NavLink";
 
 export async function Header() {
   const t = await getTranslations("common");
@@ -10,14 +11,18 @@ export async function Header() {
   return (
     <header className="header">
       <div className="container">
-        <Link href="/" className="brand">🍲 {t("appName")}</Link>
+        <Link href="/" className="brand">
+          🍲 {t("appName")}
+        </Link>
         <nav className="nav">
-          {user && <Link href="/kitchens">{t("kitchens")}</Link>}
-          {user?.isSuperAdmin && <Link href="/admin">{t("admin")}</Link>}
+          {user && <NavLink href="/kitchens">{t("kitchens")}</NavLink>}
+          {user?.isSuperAdmin && <NavLink href="/admin">{t("admin")}</NavLink>}
           <LocaleSwitcher />
           {user && (
             <form action={logout}>
-              <button className="link" type="submit">{t("logout")}</button>
+              <button className="link" type="submit">
+                {t("logout")}
+              </button>
             </form>
           )}
         </nav>

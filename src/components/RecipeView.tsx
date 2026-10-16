@@ -5,7 +5,13 @@ import { deletePhoto } from "@/actions/recipes";
 import { ConfirmButton } from "./ConfirmButton";
 import { Scaler } from "./Scaler";
 
-export async function RecipeView({ recipe, canManage = false }: { recipe: Recipe & { photos: RecipePhoto[]; tags: { name: string }[] }; canManage?: boolean }) {
+export async function RecipeView({
+  recipe,
+  canManage = false,
+}: {
+  recipe: Recipe & { photos: RecipePhoto[]; tags: { name: string }[] };
+  canManage?: boolean;
+}) {
   const t = await getTranslations("recipe");
   const times = [
     recipe.prepMinutes != null && t("prep", { n: recipe.prepMinutes }),
@@ -18,7 +24,13 @@ export async function RecipeView({ recipe, canManage = false }: { recipe: Recipe
       <h1>{recipe.title}</h1>
       {times.length > 0 && <p className="muted">{times.join(" · ")}</p>}
       {recipe.tags.length > 0 && (
-        <p className="tags">{recipe.tags.map((tag) => <span className="tag" key={tag.name}>#{tag.name}</span>)}</p>
+        <p className="tags">
+          {recipe.tags.map((tag) => (
+            <span className="tag" key={tag.name}>
+              #{tag.name}
+            </span>
+          ))}
+        </p>
       )}
       {recipe.description && <p>{recipe.description}</p>}
       {recipe.photos.length > 0 && (
@@ -29,7 +41,9 @@ export async function RecipeView({ recipe, canManage = false }: { recipe: Recipe
               <img src={`/api/photos/${p.id}`} alt={recipe.title} loading="lazy" />
               {canManage && (
                 <form action={deletePhoto.bind(null, p.id)}>
-                  <ConfirmButton className="danger">✕</ConfirmButton>
+                  <ConfirmButton className="danger" label={t("deletePhoto")}>
+                    ✕
+                  </ConfirmButton>
                 </form>
               )}
             </div>
@@ -44,7 +58,9 @@ export async function RecipeView({ recipe, canManage = false }: { recipe: Recipe
         <section>
           <h2>{t("steps")}</h2>
           <ol className="steps">
-            {stepsFromJson(recipe.steps).map((s, i) => <li key={i}>{s}</li>)}
+            {stepsFromJson(recipe.steps).map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
           </ol>
         </section>
       </div>

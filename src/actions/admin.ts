@@ -25,7 +25,9 @@ export async function createUser(_prev: FormState, formData: FormData): Promise<
 
 export async function createKitchen(formData: FormData) {
   await requireSuperAdmin();
-  const name = String(formData.get("name") ?? "").trim().slice(0, 100);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 100);
   if (!name) return;
   await db.kitchen.create({ data: { name } });
   revalidatePath("/", "layout");
@@ -34,7 +36,11 @@ export async function createKitchen(formData: FormData) {
 export async function addMember(kitchenId: string, formData: FormData) {
   await requireSuperAdmin();
   const userId = String(formData.get("userId") ?? "");
-  if (!userId) return;
+  const [user, kitchen] = await Promise.all([
+    db.user.findUnique({ where: { id: userId } }),
+    db.kitchen.findUnique({ where: { id: kitchenId } }),
+  ]);
+  if (!user || !kitchen) return;
   await db.membership.upsert({
     where: { userId_kitchenId: { userId, kitchenId } },
     update: {},

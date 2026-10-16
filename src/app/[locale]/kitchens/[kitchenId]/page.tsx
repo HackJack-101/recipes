@@ -23,10 +23,19 @@ export default async function KitchenPage({
         kitchenId,
         ...(tag ? { tags: { some: { name: tag } } } : {}),
         ...(query
-          ? { OR: [{ title: { contains: query, mode: "insensitive" } }, { description: { contains: query, mode: "insensitive" } }, { tags: { some: { name: { contains: query.toLowerCase() } } } }] }
+          ? {
+              OR: [
+                { title: { contains: query, mode: "insensitive" } },
+                { description: { contains: query, mode: "insensitive" } },
+                { tags: { some: { name: { contains: query.toLowerCase() } } } },
+              ],
+            }
           : {}),
       },
-      include: { tags: { orderBy: { name: "asc" } } },
+      include: {
+        tags: { orderBy: { name: "asc" } },
+        photos: { orderBy: { createdAt: "asc" }, take: 1, select: { id: true } },
+      },
       orderBy: { updatedAt: "desc" },
     }),
     db.tag.findMany({ where: { kitchenId }, orderBy: { name: "asc" } }),
@@ -44,10 +53,22 @@ export default async function KitchenPage({
     <>
       <h1>{kitchen.name}</h1>
       <div className="actions">
-        <Link className="btn primary" href={`/kitchens/${kitchenId}/recipes/new`}>＋ {t("newRecipe")}</Link>
-        <Link className="btn" href={`/kitchens/${kitchenId}/recipes/import`}>✨ {t("import")}</Link>
-        {total > 0 && <a className="btn" href={`/api/kitchens/${kitchenId}/export?locale=${locale}`} download>⬇ {t("exportAll")}</a>}
-        {owner && <Link className="btn" href={`/kitchens/${kitchenId}/members`}>👥 {t("manage")}</Link>}
+        <Link className="btn primary" href={`/kitchens/${kitchenId}/recipes/new`}>
+          ＋ {t("newRecipe")}
+        </Link>
+        <Link className="btn" href={`/kitchens/${kitchenId}/recipes/import`}>
+          ✨ {t("import")}
+        </Link>
+        {total > 0 && (
+          <a className="btn" href={`/api/kitchens/${kitchenId}/export?locale=${locale}`} download>
+            ⬇ {t("exportAll")}
+          </a>
+        )}
+        {owner && (
+          <Link className="btn" href={`/kitchens/${kitchenId}/members`}>
+            👥 {t("manage")}
+          </Link>
+        )}
       </div>
 
       {total > 0 && (
@@ -58,26 +79,42 @@ export default async function KitchenPage({
         </form>
       )}
       {tags.length > 0 && (
-        <p className="tags">
-          <Link href={href({ q: query })} className={`tag${tag ? "" : " active"}`}>{t("allTags")}</Link>
+        <p className="tags tag-filter">
+          <Link href={href({ q: query })} className={`tag${tag ? "" : " active"}`}>
+            {t("allTags")}
+          </Link>
           {tags.map((x) => (
-            <Link key={x.id} href={href({ q: query, tag: x.name })} className={`tag${tag === x.name ? " active" : ""}`}>#{x.name}</Link>
+            <Link key={x.id} href={href({ q: query, tag: x.name })} className={`tag${tag === x.name ? " active" : ""}`}>
+              #{x.name}
+            </Link>
           ))}
         </p>
       )}
 
       {total === 0 && <p className="muted">{t("noRecipes")}</p>}
       {total > 0 && recipes.length === 0 && (
-        <p className="muted">{t("noMatch")} <Link href={href({})}>{t("clear")}</Link></p>
+        <p className="muted">
+          {t("noMatch")} <Link href={href({})}>{t("clear")}</Link>
+        </p>
       )}
       <div className="grid">
-        {recipes.map((r) => (
-          <Link key={r.id} href={`/kitchens/${kitchenId}/recipes/${r.id}`} className="card">
-            <h3>{r.title}</h3>
-            {r.publicSlug && <span className="badge">{t("shared")}</span>}
-            {r.tags.length > 0 && <p className="muted" style={{ margin: ".25rem 0 0" }}>{r.tags.map((x) => `#${x.name}`).join(" ")}</p>}
-          </Link>
-        ))}
+        {recipes.map((r) => {
+          const minutes = (r.prepMinutes ?? 0) + (r.cookMinutes ?? 0);
+          return (
+            <Link key={r.id} href={`/kitchens/${kitchenId}/recipes/${r.id}`} className="card recipe-card">
+              {r.photos[0] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="cover" src={`/api/photos/${r.photos[0].id}`} alt="" loading="lazy" />
+              )}
+              <h3>{r.title}</h3>
+              <p className="meta muted">
+                {minutes > 0 && <span>⏱ {t("totalTime", { n: minutes })}</span>}
+                {r.publicSlug && <span className="badge">{t("shared")}</span>}
+              </p>
+              {r.tags.length > 0 && <p className="muted">{r.tags.map((x) => `#${x.name}`).join(" ")}</p>}
+            </Link>
+          );
+        })}
       </div>
     </>
   );

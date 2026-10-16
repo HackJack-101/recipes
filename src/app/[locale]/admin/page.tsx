@@ -27,18 +27,35 @@ export default async function AdminPage() {
               <div className="members" aria-label={t("members")}>
                 {k.memberships.map((m) => (
                   <span key={m.userId} className="chip" style={{ paddingRight: ".75rem" }}>
-                    {m.user.name}{m.role === "OWNER" && <> <span className="badge">{t("owner")}</span></>}
+                    {m.user.name}
+                    {m.role === "OWNER" && (
+                      <>
+                        {" "}
+                        <span className="badge">{t("owner")}</span>
+                      </>
+                    )}
                   </span>
                 ))}
               </div>
               <Link href={`/kitchens/${k.id}/members`}>{t("manage")} →</Link>
               {candidates.length > 0 && (
                 <form action={addMember.bind(null, k.id)} className="row">
-                  <select name="userId" aria-label={t("addMember")} style={{ flex: "1 1 12rem", width: "auto" }} defaultValue="">
-                    <option value="" disabled>{t("addMember")}</option>
-                    {candidates.map((u) => <option key={u.id} value={u.id}>{u.name} ({u.email})</option>)}
+                  <select
+                    name="userId"
+                    aria-label={t("addMember")}
+                    style={{ flex: "1 1 12rem", width: "auto" }}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      {t("addMember")}
+                    </option>
+                    {candidates.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.email})
+                      </option>
+                    ))}
                   </select>
-                  <select name="role" aria-label={t("members")} defaultValue="MEMBER" style={{ width: "auto" }}>
+                  <select name="role" aria-label={t("role")} defaultValue="MEMBER" style={{ width: "auto" }}>
                     <option value="MEMBER">{t("roleMember")}</option>
                     <option value="OWNER">{t("roleOwner")}</option>
                   </select>
@@ -49,7 +66,13 @@ export default async function AdminPage() {
           );
         })}
         <form action={createKitchen} className="card row">
-          <input name="name" placeholder={t("kitchenName")} aria-label={t("kitchenName")} required style={{ flex: "1 1 12rem", width: "auto" }} />
+          <input
+            name="name"
+            placeholder={t("kitchenName")}
+            aria-label={t("kitchenName")}
+            required
+            style={{ flex: "1 1 12rem", width: "auto" }}
+          />
           <button className="primary">{t("newKitchen")}</button>
         </form>
       </div>
@@ -60,7 +83,15 @@ export default async function AdminPage() {
           <tbody>
             {users.map((u) => (
               <tr key={u.id}>
-                <td>{u.name}{u.isSuperAdmin && <> <span className="badge">{t("superAdmin")}</span></>}</td>
+                <td>
+                  {u.name}
+                  {u.isSuperAdmin && (
+                    <>
+                      {" "}
+                      <span className="badge">{t("superAdmin")}</span>
+                    </>
+                  )}
+                </td>
                 <td className="muted">{u.email}</td>
               </tr>
             ))}

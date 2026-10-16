@@ -44,7 +44,11 @@ export function htmlToText(html: string): string {
     .get()
     .filter((t) => /"Recipe"/.test(t));
   $("script, style, noscript, svg, nav, footer, header, iframe, form, aside").remove();
-  const text = $("body").text().replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n").trim();
+  const text = $("body")
+    .text()
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n\s*\n+/g, "\n")
+    .trim();
   return (jsonLd.length ? `Structured data (JSON-LD):\n${jsonLd.join("\n")}\n\n` : "") + `Page text:\n${text}`;
 }
 
@@ -89,11 +93,13 @@ export async function importRecipe(mode: ImportMode, input: string, existingTags
     servings: out.servings && out.servings >= 1 ? Math.round(out.servings) : null,
     prepMinutes: out.prepMinutes != null ? Math.round(out.prepMinutes) : null,
     cookMinutes: out.cookMinutes != null ? Math.round(out.cookMinutes) : null,
-    ingredients: out.ingredients.filter((i) => i.name.trim()).map((i) => ({
-      ...i,
-      quantity: i.quantity != null && i.quantity >= 0 ? i.quantity : null,
-      unit: i.unit?.trim() || null,
-    })),
+    ingredients: out.ingredients
+      .filter((i) => i.name.trim())
+      .map((i) => ({
+        ...i,
+        quantity: i.quantity != null && i.quantity >= 0 ? i.quantity : null,
+        unit: i.unit?.trim() || null,
+      })),
     steps: out.steps.filter((s) => s.trim()),
     description: out.description?.trim() || null,
     tags: parseTags(out.tags),

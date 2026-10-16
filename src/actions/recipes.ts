@@ -6,70 +6,43 @@ import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { requireKitchen, requireRecipe } from "@/lib/permissions";
-import { parseTags, recipeDataSchema, type RecipeData } from "@/lib/recipe-schema";
+import type { RecipeData } from "@/lib/recipe-schema";
+import { parseRecipeForm } from "@/lib/recipe-form";
 import { importRecipe as runImport, type ImportMode } from "@/lib/importer";
 import { ImportError } from "@/lib/fetch-page";
 import { deletePhotoFile, MAX_PHOTO_BYTES, savePhotoFile, sniffImage } from "@/lib/storage";
 import type { FormState } from "./auth";
 
-const toInt = (v: FormDataEntryValue | null) => {
-  const n = parseInt(String(v ?? ""), 10);
-  return Number.isFinite(n) ? n : null;
-};
-
-function toQuantity(raw: string): number | null {
-  const s = raw.trim().replace(",", ".");
-  if (!s) return null;
-  const frac = s.match(/^(?:(\d+)\s+)?(\d+)\/(\d+)$/);
-  if (frac) return Number(frac[1] ?? 0) + Number(frac[2]) / Number(frac[3]);
-  const n = Number(s);
-  return Number.isFinite(n) && n >= 0 ? n : null;
-}
-
-function parseRecipeForm(fd: FormData): RecipeData | null {
-  const qty = fd.getAll("ing_qty").map(String);
-  const unit = fd.getAll("ing_unit").map(String);
-  const name = fd.getAll("ing_name").map(String);
-  const ingredients = name
-    .map((n, i) => ({ quantity: toQuantity(qty[i] ?? ""), unit: (unit[i] ?? "").trim() || null, name: n.trim() }))
-    .filter((i) => i.name);
-  const steps = String(fd.get("steps") ?? "").split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
-  const parsed = recipeDataSchema.safeParse({
-    title: String(fd.get("title") ?? ""),
-    description: String(fd.get("description") ?? "").trim() || null,
-    servings: fd.get("noGauge") ? null : toInt(fd.get("servings")),
-    prepMinutes: toInt(fd.get("prepMinutes")),
-    cookMinutes: toInt(fd.get("cookMinutes")),
-    ingredients,
-    steps,
-    tags: parseTags(String(fd.get("tags") ?? "")),
-  });
-  return parsed.success ? parsed.data : null;
-}
-
 const tagsInput = (kitchenId: string, names: string[]) => ({
-  connectOrCreate: names.map((name) => ({ where: { kitchenId_name: { kitchenId, name } }, create: { kitchenId, name } })),
+  connectOrCreate: names.map((name) => ({
+    where: { kitchenId_name: { kitchenId, name } },
+    create: { kitchenId, name },
+  })),
 });
 const pruneTags = (kitchenId: string) => db.tag.deleteMany({ where: { kitchenId, recipes: { none: {} } } });
 
-export async function saveRecipe(kitchenId: string, recipeId: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
+export async function saveRecipe(
+  kitchenId: string,
+  recipeId: string | null,
+  _prev: FormState,
+  fd: FormData,
+): Promise<FormState> {
+  const { user, kitchen } = await requireKitchen(kitchenId);
+  if (recipeId) await requireRecipe(recipeId, kitchen.id);
   const data = parseRecipeForm(fd);
   if (!data) return { error: "invalid" };
-  const locale = await getLocale();
-  if (recipeId) {
-    const { recipe } = await requireRecipe(recipeId);
-    const { tags, ...fields } = data;
-    await db.recipe.update({ where: { id: recipe.id }, data: { ...fields, tags: { set: [], ...tagsInput(recipe.kitchenId, tags) } } });
-    await pruneTags(recipe.kitchenId);
-    revalidatePath("/", "layout");
-    redirect({ href: `/kitchens/${recipe.kitchenId}/recipes/${recipe.id}`, locale });
-  }
-  const { user, kitchen } = await requireKitchen(kitchenId);
   const { tags, ...fields } = data;
-  const created = await db.recipe.create({
-    data: { ...fields, kitchenId: kitchen.id, authorId: user.id, tags: tagsInput(kitchen.id, tags) },
-  });
-  redirect({ href: `/kitchens/${kitchen.id}/recipes/${created.id}`, locale });
+  const recipe = recipeId
+    ? await db.recipe.update({
+        where: { id: recipeId },
+        data: { ...fields, tags: { set: [], ...tagsInput(kitchen.id, tags) } },
+      })
+    : await db.recipe.create({
+        data: { ...fields, kitchenId: kitchen.id, authorId: user.id, tags: tagsInput(kitchen.id, tags) },
+      });
+  if (recipeId) await pruneTags(kitchen.id);
+  revalidatePath("/", "layout");
+  redirect({ href: `/kitchens/${kitchen.id}/recipes/${recipe.id}`, locale: await getLocale() });
 }
 
 export async function importRecipeAction(kitchenId: string, _prev: FormState, fd: FormData): Promise<FormState> {
@@ -82,7 +55,11 @@ export async function importRecipeAction(kitchenId: string, _prev: FormState, fd
   let data: RecipeData;
   try {
     const existing = await db.tag.findMany({ where: { kitchenId: kitchen.id }, select: { name: true } });
-    data = await runImport(mode, input, existing.map((t) => t.name));
+    data = await runImport(
+      mode,
+      input,
+      existing.map((t) => t.name),
+    );
   } catch (e) {
     return { error: e instanceof ImportError ? e.code : "aiFailed" };
   }

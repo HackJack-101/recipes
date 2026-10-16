@@ -6,7 +6,11 @@ import { RecipeView } from "@/components/RecipeView";
 
 export const dynamic = "force-dynamic";
 
-const find = (slug: string) => db.recipe.findUnique({ where: { publicSlug: slug }, include: { photos: { orderBy: { createdAt: "asc" } }, tags: { orderBy: { name: "asc" } } } });
+const find = (slug: string) =>
+  db.recipe.findUnique({
+    where: { publicSlug: slug },
+    include: { photos: { orderBy: { createdAt: "asc" } }, tags: { orderBy: { name: "asc" } } },
+  });
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const recipe = await find((await params).slug);
