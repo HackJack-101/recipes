@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
+import { keepValues } from "@/lib/keep-values";
 import { saveRecipe } from "@/actions/recipes";
 import { quantityInput } from "@/lib/recipe-form";
 import type { Ingredient } from "@/lib/recipe-schema";
@@ -50,7 +51,7 @@ export function RecipeForm({
   const [nextId, setNextId] = useState(rows.length);
 
   return (
-    <form action={action}>
+    <form action={action} onSubmit={keepValues(action)}>
       <div className="field">
         <label htmlFor="title">{t("title")}</label>
         <input id="title" name="title" defaultValue={initial.title} required maxLength={200} />

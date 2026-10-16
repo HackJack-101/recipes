@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
+import { keepValues } from "@/lib/keep-values";
 import { importRecipeAction } from "@/actions/recipes";
 
 const MODES = ["url", "html", "text"] as const;
@@ -13,7 +14,7 @@ export function ImportForm({ kitchenId }: { kitchenId: string }) {
   const modeLabel = { url: t("modeUrl"), html: t("modeHtml"), text: t("modeText") };
 
   return (
-    <form action={action}>
+    <form action={action} onSubmit={keepValues(action)}>
       <div className="tabs" role="radiogroup">
         {MODES.map((m) => (
           <label key={m}>
