@@ -199,19 +199,22 @@ label {
   gap: 0.5rem;
   align-items: center;
 }
+/* Phones: even grid of full-width buttons. Wider screens: buttons sized to their content. */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
   gap: 0.5rem;
   margin: 1rem 0;
 }
-.actions > * {
-  flex: 1 1 auto;
-}
 @media (min-width: 640px) {
-  .actions > * {
-    flex: 0 0 auto;
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
   }
+}
+.actions form > .btn,
+.actions form > button {
+  width: 100%;
 }
 
 .card {
@@ -246,6 +249,28 @@ a.card:hover {
 .card h3 {
   margin: 0 0 0.25rem;
   font-size: 1.05rem;
+}
+.recipe-card {
+  overflow: hidden;
+}
+.recipe-card .cover {
+  display: block;
+  width: calc(100% + 2rem);
+  margin: -1rem -1rem 0.75rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.recipe-card p {
+  margin: 0.25rem 0 0;
+}
+.recipe-card .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.recipe-card .meta:empty {
+  display: none;
 }
 .badge {
   display: inline-block;

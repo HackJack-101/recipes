@@ -32,7 +32,10 @@ export default async function KitchenPage({
             }
           : {}),
       },
-      include: { tags: { orderBy: { name: "asc" } } },
+      include: {
+        tags: { orderBy: { name: "asc" } },
+        photos: { orderBy: { createdAt: "asc" }, take: 1, select: { id: true } },
+      },
       orderBy: { updatedAt: "desc" },
     }),
     db.tag.findMany({ where: { kitchenId }, orderBy: { name: "asc" } }),
@@ -95,17 +98,23 @@ export default async function KitchenPage({
         </p>
       )}
       <div className="grid">
-        {recipes.map((r) => (
-          <Link key={r.id} href={`/kitchens/${kitchenId}/recipes/${r.id}`} className="card">
-            <h3>{r.title}</h3>
-            {r.publicSlug && <span className="badge">{t("shared")}</span>}
-            {r.tags.length > 0 && (
-              <p className="muted" style={{ margin: ".25rem 0 0" }}>
-                {r.tags.map((x) => `#${x.name}`).join(" ")}
+        {recipes.map((r) => {
+          const minutes = (r.prepMinutes ?? 0) + (r.cookMinutes ?? 0);
+          return (
+            <Link key={r.id} href={`/kitchens/${kitchenId}/recipes/${r.id}`} className="card recipe-card">
+              {r.photos[0] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="cover" src={`/api/photos/${r.photos[0].id}`} alt="" loading="lazy" />
+              )}
+              <h3>{r.title}</h3>
+              <p className="meta muted">
+                {minutes > 0 && <span>⏱ {t("totalTime", { n: minutes })}</span>}
+                {r.publicSlug && <span className="badge">{t("shared")}</span>}
               </p>
-            )}
-          </Link>
-        ))}
+              {r.tags.length > 0 && <p className="muted">{r.tags.map((x) => `#${x.name}`).join(" ")}</p>}
+            </Link>
+          );
+        })}
       </div>
     </>
   );

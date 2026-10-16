@@ -28,7 +28,7 @@ export default async function RecipePage({ params }: { params: Promise<{ kitchen
           ⬇ {t("export")}
         </a>
         <form action={togglePublic.bind(null, recipe.id)}>
-          <button style={{ width: "100%" }}>{recipe.publicSlug ? t("unshare") : `🔗 ${t("share")}`}</button>
+          <button>{recipe.publicSlug ? t("unshare") : `🔗 ${t("share")}`}</button>
         </form>
       </div>
       {publicPath && (

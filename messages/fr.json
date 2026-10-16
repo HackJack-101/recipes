@@ -28,6 +28,7 @@
     "noRecipes": "Aucune recette dans cette cuisine.",
     "exportAll": "Tout exporter (.zip)",
     "shared": "Partagée",
+    "totalTime": "{n} min",
     "search": "Rechercher une recette…",
     "searchButton": "Rechercher",
     "allTags": "Tous",

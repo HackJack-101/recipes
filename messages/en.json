@@ -28,6 +28,7 @@
     "noRecipes": "No recipes in this kitchen yet.",
     "exportAll": "Export all (.zip)",
     "shared": "Shared",
+    "totalTime": "{n} min",
     "search": "Search recipes…",
     "searchButton": "Search",
     "allTags": "All",
