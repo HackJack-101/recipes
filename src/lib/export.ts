@@ -5,8 +5,26 @@ import type { Recipe } from "@prisma/client";
 type WithTags = Recipe & { tags: { name: string }[] };
 
 const L = {
-  fr: { ingredients: "Ingrédients", steps: "Préparation", servings: (n: number) => `Pour ${n} convive${n > 1 ? "s" : ""}`, noGauge: "Pas de nombre de convives défini", prep: "Préparation", cook: "Cuisson", source: "Source", tags: "Tags" },
-  en: { ingredients: "Ingredients", steps: "Instructions", servings: (n: number) => `Serves ${n}`, noGauge: "No set number of guests", prep: "Prep", cook: "Cook", source: "Source", tags: "Tags" },
+  fr: {
+    ingredients: "Ingrédients",
+    steps: "Préparation",
+    servings: (n: number) => `Pour ${n} convive${n > 1 ? "s" : ""}`,
+    noGauge: "Pas de nombre de convives défini",
+    prep: "Préparation",
+    cook: "Cuisson",
+    source: "Source",
+    tags: "Tags",
+  },
+  en: {
+    ingredients: "Ingredients",
+    steps: "Instructions",
+    servings: (n: number) => `Serves ${n}`,
+    noGauge: "No set number of guests",
+    prep: "Prep",
+    cook: "Cook",
+    source: "Source",
+    tags: "Tags",
+  },
 } as const;
 
 export function recipeToMarkdown(r: WithTags, locale: string): string {
@@ -20,7 +38,9 @@ export function recipeToMarkdown(r: WithTags, locale: string): string {
   if (r.tags.length) out.push(`${t.tags}: ${r.tags.map((x) => x.name).join(", ")}`, "");
   out.push(`## ${t.ingredients}`, "");
   for (const i of ingredientsFromJson(r.ingredients)) {
-    out.push(`- ${[i.quantity != null ? formatQuantity(i.quantity) : "", i.unit ?? "", i.name].filter(Boolean).join(" ")}`);
+    out.push(
+      `- ${[i.quantity != null ? formatQuantity(i.quantity) : "", i.unit ?? "", i.name].filter(Boolean).join(" ")}`,
+    );
   }
   out.push("", `## ${t.steps}`, "");
   stepsFromJson(r.steps).forEach((s, n) => out.push(`${n + 1}. ${s}`));
@@ -29,5 +49,13 @@ export function recipeToMarkdown(r: WithTags, locale: string): string {
 }
 
 export function fileSlug(s: string) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "recipe";
+  return (
+    s
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 60) || "recipe"
+  );
 }

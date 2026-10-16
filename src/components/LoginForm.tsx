@@ -17,8 +17,14 @@ export function LoginForm() {
         <label htmlFor="password">{t("password")}</label>
         <input id="password" name="password" type="password" autoComplete="current-password" required />
       </div>
-      {state?.error && <p className="error" role="alert">{t("invalid")}</p>}
-      <button className="primary" style={{ width: "100%" }} disabled={pending}>{t("submit")}</button>
+      {state?.error && (
+        <p className="error" role="alert">
+          {t("invalid")}
+        </p>
+      )}
+      <button className="primary" style={{ width: "100%" }} disabled={pending}>
+        {t("submit")}
+      </button>
     </form>
   );
 }

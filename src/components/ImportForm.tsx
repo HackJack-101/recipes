@@ -30,9 +30,15 @@ export function ImportForm({ kitchenId }: { kitchenId: string }) {
           <textarea id={mode} name={mode} required style={{ minHeight: "14rem" }} />
         )}
       </div>
-      {state?.error && <p className="error" role="alert">{t(`errors.${state.error}` as "errors.empty")}</p>}
+      {state?.error && (
+        <p className="error" role="alert">
+          {t(`errors.${state.error}` as "errors.empty")}
+        </p>
+      )}
       <div className="actions">
-        <button className="primary" disabled={pending}>{pending ? t("running") : t("submit")}</button>
+        <button className="primary" disabled={pending}>
+          {pending ? t("running") : t("submit")}
+        </button>
       </div>
     </form>
   );

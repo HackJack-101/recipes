@@ -13,10 +13,20 @@ export function PhotoUpload({ recipeId }: { recipeId: string }) {
       <label className="btn" style={{ cursor: "pointer", marginBottom: 0 }}>
         📷 {t("addPhoto")}
         {/* On phones, the browser offers the camera or the gallery directly */}
-        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/gif" hidden disabled={pending}
-          onChange={() => form.current?.requestSubmit()} />
+        <input
+          type="file"
+          name="photo"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          hidden
+          disabled={pending}
+          onChange={() => form.current?.requestSubmit()}
+        />
       </label>
-      {state?.error && <p className="error" role="alert">{t("photoInvalid")}</p>}
+      {state?.error && (
+        <p className="error" role="alert">
+          {t("photoInvalid")}
+        </p>
+      )}
     </form>
   );
 }

@@ -10,14 +10,18 @@ export async function Header() {
   return (
     <header className="header">
       <div className="container">
-        <Link href="/" className="brand">🍲 {t("appName")}</Link>
+        <Link href="/" className="brand">
+          🍲 {t("appName")}
+        </Link>
         <nav className="nav">
           {user && <Link href="/kitchens">{t("kitchens")}</Link>}
           {user?.isSuperAdmin && <Link href="/admin">{t("admin")}</Link>}
           <LocaleSwitcher />
           {user && (
             <form action={logout}>
-              <button className="link" type="submit">{t("logout")}</button>
+              <button className="link" type="submit">
+                {t("logout")}
+              </button>
             </form>
           )}
         </nav>

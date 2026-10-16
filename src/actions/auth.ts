@@ -12,7 +12,9 @@ export type FormState = { error?: string } | undefined;
 const DUMMY_HASH = bcrypt.hashSync("dummy-password", 12);
 
 export async function login(_prev: FormState, formData: FormData): Promise<FormState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const password = String(formData.get("password") ?? "");
   const user = await db.user.findUnique({ where: { email } });
   const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);

@@ -17,7 +17,9 @@ export function LocaleSwitcher() {
       onChange={(e) => router.replace(pathname, { locale: e.target.value })}
     >
       {routing.locales.map((l) => (
-        <option key={l} value={l}>{t(l)}</option>
+        <option key={l} value={l}>
+          {t(l)}
+        </option>
       ))}
     </select>
   );

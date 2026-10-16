@@ -26,12 +26,29 @@ export function Scaler({ ingredients, servings }: { ingredients: Ingredient[]; s
     <div>
       {servings === null && <p className="muted">{t("noGauge")}</p>}
       <div className="scaler">
-        <label htmlFor="scale" style={{ margin: 0 }}>{servings ? t("guests") : t("multiplier")}</label>
-        <button type="button" className="step-btn" aria-label="−" onClick={() => clamp((n) => n - step)}>−</button>
-        <input id="scale" type="number" inputMode="decimal" min={servings ? 1 : 0.25} step={step} value={target}
-          onChange={(e) => e.target.value !== "" && clamp(() => Number(e.target.value))} />
-        <button type="button" className="step-btn" aria-label="+" onClick={() => clamp((n) => n + step)}>+</button>
-        {target !== base && <button type="button" className="link" onClick={() => setTarget(base)}>{t("reset")}</button>}
+        <label htmlFor="scale" style={{ margin: 0 }}>
+          {servings ? t("guests") : t("multiplier")}
+        </label>
+        <button type="button" className="step-btn" aria-label="−" onClick={() => clamp((n) => n - step)}>
+          −
+        </button>
+        <input
+          id="scale"
+          type="number"
+          inputMode="decimal"
+          min={servings ? 1 : 0.25}
+          step={step}
+          value={target}
+          onChange={(e) => e.target.value !== "" && clamp(() => Number(e.target.value))}
+        />
+        <button type="button" className="step-btn" aria-label="+" onClick={() => clamp((n) => n + step)}>
+          +
+        </button>
+        {target !== base && (
+          <button type="button" className="link" onClick={() => setTarget(base)}>
+            {t("reset")}
+          </button>
+        )}
       </div>
       <ul className="ing-list">
         {ingredients.map((i, n) => (

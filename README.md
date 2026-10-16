@@ -33,7 +33,7 @@ Local build with the SHA: `GIT_SHA=$(git rev-parse HEAD) GIT_REPO=hackjack-101/r
 
 - **Users and kitchens**: the super admin creates users and kitchens. A user can belong to several
   kitchens; every recipe belongs to exactly one kitchen.
-- **Roles**: super admin (everything), kitchen *owner* (manages members, renames the kitchen) and *member*.
+- **Roles**: super admin (everything), kitchen _owner_ (manages members, renames the kitchen) and _member_.
 - **Recipes**: manual entry, or import from a **URL**, **raw HTML** or **plain text**. A Claude agent
   (`src/lib/importer.ts`, model set by `ANTHROPIC_MODEL`) extracts a structured recipe, suggests tags and
   reuses the kitchen's existing ones. The result opens in the editor for review.
@@ -46,15 +46,15 @@ Local build with the SHA: `GIT_SHA=$(git rev-parse HEAD) GIT_REPO=hackjack-101/r
 
 ## Configuration
 
-| Variable | Purpose |
-| --- | --- |
-| `POSTGRES_PASSWORD` | Database password (Docker Compose) |
-| `SESSION_SECRET` | Session signing secret, 32+ characters |
-| `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD`, `SUPERADMIN_NAME` | Super admin created at startup |
-| `ANTHROPIC_API_KEY` | Enables the AI import |
-| `ANTHROPIC_MODEL` | Model used by the import agent (default `claude-haiku-5-5`) |
-| `COOKIE_SECURE` | Set to `true` when served over HTTPS |
-| `PORT` | Host port (default `3000`) |
+| Variable                                                     | Purpose                                                     |
+| ------------------------------------------------------------ | ----------------------------------------------------------- |
+| `POSTGRES_PASSWORD`                                          | Database password (Docker Compose)                          |
+| `SESSION_SECRET`                                             | Session signing secret, 32+ characters                      |
+| `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD`, `SUPERADMIN_NAME` | Super admin created at startup                              |
+| `ANTHROPIC_API_KEY`                                          | Enables the AI import                                       |
+| `ANTHROPIC_MODEL`                                            | Model used by the import agent (default `claude-haiku-5-5`) |
+| `COOKIE_SECURE`                                              | Set to `true` when served over HTTPS                        |
+| `PORT`                                                       | Host port (default `3000`)                                  |
 
 Some websites block automated requests (HTTP 403). For those, open the page in your browser and use the
 **HTML source** or **plain text** import instead.

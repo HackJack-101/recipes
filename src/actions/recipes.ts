@@ -33,7 +33,10 @@ function parseRecipeForm(fd: FormData): RecipeData | null {
   const ingredients = name
     .map((n, i) => ({ quantity: toQuantity(qty[i] ?? ""), unit: (unit[i] ?? "").trim() || null, name: n.trim() }))
     .filter((i) => i.name);
-  const steps = String(fd.get("steps") ?? "").split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+  const steps = String(fd.get("steps") ?? "")
+    .split(/\n\s*\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
   const parsed = recipeDataSchema.safeParse({
     title: String(fd.get("title") ?? ""),
     description: String(fd.get("description") ?? "").trim() || null,
@@ -48,18 +51,29 @@ function parseRecipeForm(fd: FormData): RecipeData | null {
 }
 
 const tagsInput = (kitchenId: string, names: string[]) => ({
-  connectOrCreate: names.map((name) => ({ where: { kitchenId_name: { kitchenId, name } }, create: { kitchenId, name } })),
+  connectOrCreate: names.map((name) => ({
+    where: { kitchenId_name: { kitchenId, name } },
+    create: { kitchenId, name },
+  })),
 });
 const pruneTags = (kitchenId: string) => db.tag.deleteMany({ where: { kitchenId, recipes: { none: {} } } });
 
-export async function saveRecipe(kitchenId: string, recipeId: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
+export async function saveRecipe(
+  kitchenId: string,
+  recipeId: string | null,
+  _prev: FormState,
+  fd: FormData,
+): Promise<FormState> {
   const data = parseRecipeForm(fd);
   if (!data) return { error: "invalid" };
   const locale = await getLocale();
   if (recipeId) {
     const { recipe } = await requireRecipe(recipeId);
     const { tags, ...fields } = data;
-    await db.recipe.update({ where: { id: recipe.id }, data: { ...fields, tags: { set: [], ...tagsInput(recipe.kitchenId, tags) } } });
+    await db.recipe.update({
+      where: { id: recipe.id },
+      data: { ...fields, tags: { set: [], ...tagsInput(recipe.kitchenId, tags) } },
+    });
     await pruneTags(recipe.kitchenId);
     revalidatePath("/", "layout");
     redirect({ href: `/kitchens/${recipe.kitchenId}/recipes/${recipe.id}`, locale });
@@ -82,7 +96,11 @@ export async function importRecipeAction(kitchenId: string, _prev: FormState, fd
   let data: RecipeData;
   try {
     const existing = await db.tag.findMany({ where: { kitchenId: kitchen.id }, select: { name: true } });
-    data = await runImport(mode, input, existing.map((t) => t.name));
+    data = await runImport(
+      mode,
+      input,
+      existing.map((t) => t.name),
+    );
   } catch (e) {
     return { error: e instanceof ImportError ? e.code : "aiFailed" };
   }

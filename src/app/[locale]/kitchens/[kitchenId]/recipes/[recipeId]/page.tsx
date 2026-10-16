@@ -16,11 +16,17 @@ export default async function RecipePage({ params }: { params: Promise<{ recipeI
 
   return (
     <>
-      <p><Link href={`/kitchens/${recipe.kitchenId}`}>← {recipe.kitchen.name}</Link></p>
+      <p>
+        <Link href={`/kitchens/${recipe.kitchenId}`}>← {recipe.kitchen.name}</Link>
+      </p>
       <div className="actions no-print">
-        <Link className="btn" href={`/kitchens/${recipe.kitchenId}/recipes/${recipe.id}/edit`}>✏️ {tc("edit")}</Link>
+        <Link className="btn" href={`/kitchens/${recipe.kitchenId}/recipes/${recipe.id}/edit`}>
+          ✏️ {tc("edit")}
+        </Link>
         <PhotoUpload recipeId={recipe.id} />
-        <a className="btn" href={`/api/recipes/${recipe.id}/export?locale=${locale}`} download>⬇ {t("export")}</a>
+        <a className="btn" href={`/api/recipes/${recipe.id}/export?locale=${locale}`} download>
+          ⬇ {t("export")}
+        </a>
         <form action={togglePublic.bind(null, recipe.id)}>
           <button style={{ width: "100%" }}>{recipe.publicSlug ? t("unshare") : `🔗 ${t("share")}`}</button>
         </form>
@@ -28,13 +34,20 @@ export default async function RecipePage({ params }: { params: Promise<{ recipeI
       {publicPath && (
         <div className="card no-print" style={{ marginBottom: "1rem" }}>
           <strong>{t("publicLink")}</strong>
-          <p style={{ margin: ".25rem 0", wordBreak: "break-all" }}><a href={publicPath}>{publicPath}</a></p>
+          <p style={{ margin: ".25rem 0", wordBreak: "break-all" }}>
+            <a href={publicPath}>{publicPath}</a>
+          </p>
           <span className="muted">{t("sharedNote")}</span>
         </div>
       )}
       <RecipeView recipe={recipe} canManage />
       {recipe.sourceUrl && (
-        <p className="muted">{t("source")} : <a href={recipe.sourceUrl} rel="noopener noreferrer nofollow">{recipe.sourceUrl}</a></p>
+        <p className="muted">
+          {t("source")} :{" "}
+          <a href={recipe.sourceUrl} rel="noopener noreferrer nofollow">
+            {recipe.sourceUrl}
+          </a>
+        </p>
       )}
       <form action={deleteRecipe.bind(null, recipe.id)} className="actions no-print">
         <ConfirmButton className="btn danger">{tc("delete")}</ConfirmButton>

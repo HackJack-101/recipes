@@ -25,7 +25,9 @@ export async function createUser(_prev: FormState, formData: FormData): Promise<
 
 export async function createKitchen(formData: FormData) {
   await requireSuperAdmin();
-  const name = String(formData.get("name") ?? "").trim().slice(0, 100);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 100);
   if (!name) return;
   await db.kitchen.create({ data: { name } });
   revalidatePath("/", "layout");
