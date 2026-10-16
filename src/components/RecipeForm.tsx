@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { saveRecipe } from "@/actions/recipes";
+import { quantityInput } from "@/lib/recipe-form";
 import type { Ingredient } from "@/lib/recipe-schema";
 
 type Initial = {
@@ -125,7 +126,7 @@ export function RecipeForm({
             aria-label={t("quantity")}
             placeholder={t("quantity")}
             inputMode="decimal"
-            defaultValue={ing.quantity ?? ""}
+            defaultValue={quantityInput(ing.quantity)}
           />
           <input name="ing_unit" aria-label={t("unit")} placeholder={t("unit")} defaultValue={ing.unit ?? ""} />
           <input
