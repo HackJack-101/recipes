@@ -2,16 +2,13 @@
   "common": {
     "appName": "Recipes",
     "save": "Save",
-    "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "back": "Back",
     "logout": "Log out",
     "confirmDelete": "Delete permanently?",
     "admin": "Administration",
     "kitchens": "Kitchens",
-    "minutesShort": "{n} min",
-    "version": "Version"
+    "version": "Version:"
   },
   "auth": {
     "title": "Sign in",
@@ -55,11 +52,10 @@
     "unshare": "Stop sharing",
     "publicLink": "Public link",
     "sharedNote": "Anyone with the link can view this recipe.",
-    "photos": "Photos",
     "addPhoto": "Add a photo",
     "photoInvalid": "Invalid image (JPEG, PNG, WebP or GIF, 10 MB max).",
-    "source": "Source",
-    "by": "Added by {name}",
+    "deletePhoto": "Delete photo",
+    "source": "Source:",
     "sharedFrom": "Shared recipe"
   },
   "form": {
@@ -85,6 +81,7 @@
   "import": {
     "title": "Import a recipe",
     "intro": "An AI agent analyses the content and converts it to the app's format. You can review and fix the result.",
+    "mode": "Import source",
     "modeUrl": "Web address",
     "modeHtml": "HTML source",
     "modeText": "Plain text",
@@ -118,6 +115,7 @@
     "newKitchen": "New kitchen",
     "kitchenName": "Kitchen name",
     "members": "Members",
+    "role": "Role",
     "addMember": "Add…",
     "add": "Add",
     "remove": "Remove",
@@ -141,6 +139,7 @@
     "promote": "Make owner",
     "demote": "Remove owner role",
     "remove": "Remove",
+    "confirmRemove": "Remove this member from the kitchen?",
     "add": "Add a member",
     "email": "Existing account email",
     "role": "Role",

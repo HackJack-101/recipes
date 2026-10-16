@@ -2,16 +2,13 @@
   "common": {
     "appName": "Recettes",
     "save": "Enregistrer",
-    "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "back": "Retour",
     "logout": "Déconnexion",
     "confirmDelete": "Supprimer définitivement ?",
     "admin": "Administration",
     "kitchens": "Cuisines",
-    "minutesShort": "{n} min",
-    "version": "Version"
+    "version": "Version :"
   },
   "auth": {
     "title": "Connexion",
@@ -55,11 +52,10 @@
     "unshare": "Arrêter le partage",
     "publicLink": "Lien public",
     "sharedNote": "Toute personne disposant du lien peut voir cette recette.",
-    "photos": "Photos",
     "addPhoto": "Ajouter une photo",
     "photoInvalid": "Image invalide (JPEG, PNG, WebP ou GIF, 10 Mo max).",
-    "source": "Source",
-    "by": "Ajoutée par {name}",
+    "deletePhoto": "Supprimer la photo",
+    "source": "Source :",
     "sharedFrom": "Recette partagée"
   },
   "form": {
@@ -85,6 +81,7 @@
   "import": {
     "title": "Importer une recette",
     "intro": "Un agent IA analyse le contenu et le met au format de l'application. Vous pourrez relire et corriger le résultat.",
+    "mode": "Source de l'import",
     "modeUrl": "Adresse web",
     "modeHtml": "Code source HTML",
     "modeText": "Texte libre",
@@ -118,6 +115,7 @@
     "newKitchen": "Nouvelle cuisine",
     "kitchenName": "Nom de la cuisine",
     "members": "Membres",
+    "role": "Rôle",
     "addMember": "Ajouter…",
     "add": "Ajouter",
     "remove": "Retirer",
@@ -141,6 +139,7 @@
     "promote": "Nommer propriétaire",
     "demote": "Retirer propriétaire",
     "remove": "Retirer",
+    "confirmRemove": "Retirer ce membre de la cuisine ?",
     "add": "Ajouter un membre",
     "email": "E-mail du compte existant",
     "role": "Rôle",

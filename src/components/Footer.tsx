@@ -9,7 +9,7 @@ export async function Footer() {
   return (
     <footer className="container footer no-print">
       <span className="muted">
-        {t("version")} :{" "}
+        {t("version")}{" "}
         {repo && sha !== "dev" ? (
           <a href={`https://github.com/${repo}/commit/${sha}`} title={sha} rel="noopener noreferrer">
             <code>{label}</code>

@@ -55,7 +55,7 @@ export default async function AdminPage() {
                       </option>
                     ))}
                   </select>
-                  <select name="role" aria-label={t("members")} defaultValue="MEMBER" style={{ width: "auto" }}>
+                  <select name="role" aria-label={t("role")} defaultValue="MEMBER" style={{ width: "auto" }}>
                     <option value="MEMBER">{t("roleMember")}</option>
                     <option value="OWNER">{t("roleOwner")}</option>
                   </select>

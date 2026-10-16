@@ -41,7 +41,9 @@ export async function RecipeView({
               <img src={`/api/photos/${p.id}`} alt={recipe.title} loading="lazy" />
               {canManage && (
                 <form action={deletePhoto.bind(null, p.id)}>
-                  <ConfirmButton className="danger">✕</ConfirmButton>
+                  <ConfirmButton className="danger" label={t("deletePhoto")}>
+                    ✕
+                  </ConfirmButton>
                 </form>
               )}
             </div>

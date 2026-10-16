@@ -43,7 +43,7 @@ export default async function RecipePage({ params }: { params: Promise<{ kitchen
       <RecipeView recipe={recipe} canManage />
       {recipe.sourceUrl && (
         <p className="muted">
-          {t("source")} :{" "}
+          {t("source")}{" "}
           <a href={recipe.sourceUrl} rel="noopener noreferrer nofollow">
             {recipe.sourceUrl}
           </a>

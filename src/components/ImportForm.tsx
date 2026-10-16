@@ -15,7 +15,7 @@ export function ImportForm({ kitchenId }: { kitchenId: string }) {
 
   return (
     <form action={action} onSubmit={keepValues(action)}>
-      <div className="tabs" role="radiogroup">
+      <div className="tabs" role="radiogroup" aria-label={t("mode")}>
         {MODES.map((m) => (
           <label key={m}>
             <input type="radio" name="mode" value={m} checked={mode === m} onChange={() => setMode(m)} />

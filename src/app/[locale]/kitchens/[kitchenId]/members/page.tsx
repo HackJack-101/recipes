@@ -46,7 +46,9 @@ export default async function MembersPage({ params }: { params: Promise<{ kitche
               <button>{m.role === "OWNER" ? t("demote") : t("promote")}</button>
             </form>
             <form action={removeMember.bind(null, kitchenId, m.userId)}>
-              <ConfirmButton className="danger">{t("remove")}</ConfirmButton>
+              <ConfirmButton className="danger" question={t("confirmRemove")}>
+                {t("remove")}
+              </ConfirmButton>
             </form>
           </div>
         ))}
