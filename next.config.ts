@@ -1,0 +1,13 @@
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
+const config: NextConfig = {
+  serverExternalPackages: ["@prisma/client", "bcryptjs"],
+  experimental: {
+    serverActions: { bodySizeLimit: "12mb" },
+  },
+};
+
+export default withNextIntl(config);

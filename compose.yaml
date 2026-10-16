@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: recipes
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définir POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: recipes
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipes"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    # Image publiée par la GitHub Action (docker compose pull), ou construite en local (--build).
+    image: ${APP_IMAGE:-ghcr.io/hackjack-101/recipes:latest}
+    build:
+      context: .
+      args:
+        GIT_SHA: ${GIT_SHA:-dev}
+        GIT_REPO: ${GIT_REPO:-}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      DATABASE_URL: postgresql://recipes:${POSTGRES_PASSWORD}@db:5432/recipes
+      SESSION_SECRET: ${SESSION_SECRET:?définir SESSION_SECRET dans .env}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL:-}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-}
+      SUPERADMIN_NAME: ${SUPERADMIN_NAME:-Admin}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-5-5}
+      UPLOAD_DIR: /data/uploads
+      # Mettre à true une fois derrière HTTPS (cookie de session "Secure")
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  pgdata:
+  uploads:
